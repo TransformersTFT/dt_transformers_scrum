@@ -2,6 +2,7 @@
 ########  en evaluation se usan reset y step (agente)
 #######€  en models está el modelo
 #######luego tenemos el training
+#CAMBIO
 
 
 import gym       #interface to reinforcement learning tasks
