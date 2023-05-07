@@ -31,7 +31,7 @@ class env_va(gym.Env):
                 ############################################################################ instance variables of the class 
                 ###############################basic variables
 
-                self.snapshot = pd.read_excel(io='C:/Users/sergy/OneDrive/Documentos/MASTER/TFM/pruebas_sin_servidor/production_snapshot_pruebas.xlsx',
+                self.snapshot = pd.read_excel(io='C:/Users/sergy/OneDrive/Documentos/MASTER/TFM/pruebas_sin_servidor/github/dt_transformers_scrum/production_snapshot_pruebas.xlsx',
                                                         sheet_name='Hoja1', header=0, names = None, index_col = None,
                                                         usecols= 'A:T', engine= 'openpyxl')
 
@@ -128,7 +128,7 @@ class env_va(gym.Env):
                 
         def reset(self):
                 self.current_time_step=0
-                self.snapshot = pd.read_excel(io='C:/Users/sergy/OneDrive/Documentos/MASTER/TFM/pruebas_sin_servidor/production_snapshot_pruebas.xlsx',
+                self.snapshot = pd.read_excel(io='C:/Users/sergy/OneDrive/Documentos/MASTER/TFM/pruebas_sin_servidor/github/dt_transformers_scrum/production_snapshot_pruebas.xlsx',
                                                         sheet_name='Hoja1', header=0, names = None, index_col = None,
                                                         usecols= 'A:T', engine= 'openpyxl')
 
