@@ -9,6 +9,7 @@ import plotly.figure_factory as ff
 import openpyxl
 import operative_functions as asf
 import globals
+#cambio
 
 global results_2, winner_df, all_winner_df, snapshot
 
