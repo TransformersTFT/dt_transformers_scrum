@@ -10,6 +10,8 @@ import openpyxl
 import operative_functions as asf
 import globals
 #cambio
+#tu
+#ey
 
 global results_2, winner_df, all_winner_df, snapshot
 
