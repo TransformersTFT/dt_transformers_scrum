@@ -50,7 +50,8 @@ def experiment(
     state_dim = env.observation_space.shape[0]   #it takes the shape that we have established in the environment
     act_dim = env.action_space.n
         # load dataset
-    dataset_path = f'data/{env_name}-{dataset}-v2.pkl'
+    #dataset_path = f'data/{env_name}-{dataset}-v2.pkl'
+    dataset_path='env_va-dataset-v2.pkl'
     with open(dataset_path, 'rb') as f:
         trajectories = pickle.load(f)
         #pickle deserializes the dataset as json does
