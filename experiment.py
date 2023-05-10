@@ -3,7 +3,7 @@
 #######€  en models está el modelo
 #######luego tenemos el training
 
-
+from tensorflow.keras.preprocessing.sequence import pad_sequences               #sergio 09/05
 import gym       #interface to reinforcement learning tasks
 import numpy as np
 import torch      #machine learning library used for developing and training neural networks. Unlike TensorFlow, PyTorch uses dynamic computation, which allows greater flexibility in building complex architectures. 
@@ -51,27 +51,76 @@ def experiment(
     act_dim = env.action_space.n
         # load dataset
     #dataset_path = f'data/{env_name}-{dataset}-v2.pkl'
-    dataset_path='env_va-dataset-v2.pkl'
+    #dataset_path='env_va-dataset-v2.pkl'
+    dataset_path='dataset.pkl'
     with open(dataset_path, 'rb') as f:
         trajectories = pickle.load(f)
+        #print(trajectories)
         #pickle deserializes the dataset as json does
         # save all path information into separate lists
     mode = variant.get('mode', 'normal')
     states, traj_lens, returns = [], [], []
+    #for path in trajectories:
+###############################################################################Sergio
     for path in trajectories:
         if mode == 'delayed':  # delayed: all rewards moved to end of trajectory
             path['rewards'][-1] = path['rewards'].sum()
             path['rewards'][:-1] = 0.
         states.append(path['observations'])
         traj_lens.append(len(path['observations']))
-        returns.append(path['rewards'].sum())
+        #returns.append(path['rewards'].sum())
+        #returns.append(np.array(path['rewards']).sum())
+        #returns.append(np.sum(np.array(path['rewards'])))
+        returns.append(np.sum(np.array(path['rewards'])))
+
+
+
     traj_lens, returns = np.array(traj_lens), np.array(returns)
+
+
+    #traj_lens, returns = np.array(traj_lens), np.array(returns)
 
     # used for input normalization
     states = np.concatenate(states, axis=0)
-    state_mean, state_std = np.mean(states, axis=0), np.std(states, axis=0) + 1e-6
+    #traj_lens.append(len(path['observations']))
+    #returns.append(path['rewards'].sum())
+    #states = pad_sequences(states, maxlen=50, dtype='float32', padding='post', truncating='post')       #sergio 09/05  Pad the states so that they have the same shape
+
+# Convert to arrays
+  
+    state_mean = np.mean(states, axis=0)
+    #state_std = np.std(states, axis=0) + 1e-6
+    #state_std = np.std([np.array(s) for s in states], axis=0) + 1e-6
+    state_std = np.std([np.array(s) for s in states], axis=0) + 1e-6
+
+    #state_std = np.std(states.to_numpy(), axis=0) + 1e-6
 
     num_timesteps = sum(traj_lens)
+
+###############################################################################
+#for path in trajectories:
+    '''
+    #print(trajectories['obs'])
+    for path in trajectories['obs']:
+        print(path)
+
+        if mode == 'delayed':  # delayed: all rewards moved to end of trajectory
+            path['reward'][-1] = path['reward'].sum()
+            path['reward'][:-1] = 0.
+        #pruebas
+        #prueba_sergio = path['obs'][0][1]   
+        #print(prueba_sergio)
+        states.append(path)
+        #states.append(path['obs'])
+        traj_lens.append(path.shape)
+        #traj_lens.append(len(path))
+        #traj_lens.append(len(path['obs']))
+    for path in trajectories['reward']:
+        returns.append(path['reward'].sum())
+    traj_lens, returns = np.array(traj_lens), np.array(returns)
+    
+
+    '''
 
     print('=' * 50)
     print(f'Starting new experiment: {env_name} {dataset}')

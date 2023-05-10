@@ -114,9 +114,9 @@ class env_va(gym.Env):
         
         def reward_scaler(self,reward):
                 self.max_cost=self.results_2.iloc[-1]['cost']
-                print("El max cost es:")
-                print(reward)
-                print(self.max_cost)
+                #print("El max cost es:")
+                #print(reward)
+                #print(self.max_cost)
                 return reward /self.max_cost
 
         def calculate_reward(self,action):
@@ -151,9 +151,15 @@ class env_va(gym.Env):
         def step(self,action):
                 self.current_time_step+=1
                 #if action < len(self.costcoils_df):
-                if action < (len(self.results_2))-1:
+                #if action < (len(self.results_2))-1:
+                action=int(action)
+                if action in self.snapshot['Coil number example'].values:
+                        bandera=1
+                else:
+                        bandera=0
+                if bandera==1:
                         #print(action)
-                        print("El tamaño de self.results_2 es :", self.results_2.shape)
+                        #print("El tamaño de self.results_2 es :", self.results_2.shape)
                         #1. evaluo
                         #2.ordeno por costes.
                         #3.cogemos el que deberia haber ganado
@@ -164,18 +170,28 @@ class env_va(gym.Env):
                         self.jid_list_2=self.assess_costs_coil.loc[:,'Coil number example'].tolist()
                         self.results_2 = asf.va_result(self.assess_costs_coil,self.jid_list_2)
                         #####self.winner_df =self.results_2.iloc[[0]] 
-                        
+                        #print(self.results_2)
                                                  #esto es por costes
-                        print("Tamaño del df de costcoils:",self.costcoils_df.shape)
+                        #print("Tamaño del df de costcoils:",self.costcoils_df.shape)
 
-                        print("La accion es :",action)
+                        #print("La accion es :",action)
+                        #if action < (len(self.results_2))-1:
+                        self.winner_df = self.results_2[self.results_2['Coil']==action]                        #el ganador es obviamente el que se elige
+                        print(self.winner_df)
 
-                        self.winner_df = self.results_2.iloc[[action]]                          #el ganador es obviamente el que se elige.
+
                         self.winner_df = self.winner_df.reset_index(drop=True)                  
                         self.coil_with_min_cost=self.results_2.iloc[0]['Coil'] 
-                        self.costcoils_df=self.results_2.loc[:,'cost'] 
-                        self.costcoils=self.costcoils_df.to_numpy()            
-                        self.costcoils[action] = self.costcoils_df.to_numpy()[action]
+                        #self.costcoils_df=self.results_2.loc[:,'cost'] 
+                        #self.costcoils=self.costcoils_df.to_numpy()      
+                        self.costcoils[action]=self.winner_df['cost']
+
+                        '''
+                        if action < (len(self.results_2))-1:     
+                                self.costcoils[action] = self.costcoils_df.to_numpy()[action]
+                        else:
+                                self.costcoils[action] = self.costcoils_df.to_numpy()[action]
+                        '''
                         #print("Tamaño del df de costcoils:",self.costcoils_df.shape)
                         #print("tamaño del vector:", self.costcoils.shape)
                         self.all_winner_df = pd.concat([self.all_winner_df,self.winner_df])              
@@ -191,12 +207,12 @@ class env_va(gym.Env):
                         #print(self.winner_df)
                         #print("--------------------------------------------------------")
 
-                        print(self.all_winner_df)
+                        #print(self.snapshot)
                         #update current time step
                         #calculate reward
                         reward=self.calculate_reward(action)
-                        print("-------------------------This is the reward---------------")
-                        print(reward)
+                        #print("-------------------------This is the reward---------------")
+                        #print(reward)
                         #update state
                 
                 else:
@@ -218,6 +234,7 @@ class env_va(gym.Env):
                         done=True
                 else:
                         done=False
+                print(done)
 
                 #create info dictionary
                 info={}
